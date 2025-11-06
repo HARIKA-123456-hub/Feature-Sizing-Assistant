@@ -25,8 +25,16 @@ Do NOT go too granular (avoid splitting into tiny tasks).
 For each module, provide:
 1. **Module Name**
 2. **Short Description**
-3. **Effort Size** → S / M / L (where S ≈ <3 days, M ≈ up to 2 weeks, L > 2 weeks)
-4. **Key Risk or Dependency**
+3. **Effort Size** → XS / S / M / L / XL / XXL (T-shirt sizing):
+   - XS = 0.5-1 day (Very small, trivial change - UI text update, minor config)
+   - S = 1-2 days (Small, low complexity - Small UI feature, simple API)
+   - M = 3-5 days (Medium complexity - New screen + API CRUD)
+   - L = 6-10 days (Large, multi-module work - Payments, role-based modules)
+   - XL = 11-15 days (Very large, cross-team dependencies - Workflow automation, integrations)
+   - XXL = 16+ days (Massive/Epic - Analytics engines, Multi-system sync)
+4. **Sub-Modules** (break down the module into 2-5 specific sub-components with optional effort sizing)
+5. **Key Risk or Dependency**
+6. **Dependencies** (other modules or external systems this module depends on)
 
 Finally, list any **Gaps / Clarifications Needed**.
 
@@ -43,15 +51,23 @@ Return ONLY a valid JSON array in this exact format:
   {
     "name": "Module Name",
     "description": "What it does",
-    "effort": "S|M|L",
+    "effort": "XS|S|M|L|XL|XXL",
+    "subModules": [
+      {
+        "name": "Sub-module name",
+        "effort": "XS|S|M|L|XL|XXL",
+        "description": "What this sub-module does"
+      }
+    ],
     "risk": "Main risk",
+    "dependencies": ["Dependency 1", "Dependency 2"],
     "gaps": ["Gap 1", "Gap 2"]
   }
 ]
 
 **Rules:**
 - Keep modules high-level, not granular
-- Use effort sizing: S = <3 days, M = up to 2 weeks, L = >2 weeks
+- Use T-shirt sizing: XS = 0.5-1 day, S = 1-2 days, M = 3-5 days, L = 6-10 days, XL = 11-15 days, XXL = 16+ days
 - Include realistic risks and dependencies
 - Identify gaps/clarifications needed
 - Focus on functional scope, not implementation details
@@ -95,7 +111,9 @@ Return ONLY a valid JSON array in this exact format:
       description: module.description,
       effort: module.effort,
       risks: module.risk ? [module.risk] : [],
-      score: module.effort === "L" ? 4 : module.effort === "M" ? 3 : 2,
+      score: module.effort === "XXL" ? 16 : module.effort === "XL" ? 13 : module.effort === "L" ? 8 : module.effort === "M" ? 4 : module.effort === "S" ? 2 : 1,
+      subModules: module.subModules || [],
+      dependencies: module.dependencies || [],
     }));
 
     // Extract gaps from all modules

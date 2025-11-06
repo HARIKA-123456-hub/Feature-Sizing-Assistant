@@ -1,4 +1,10 @@
-export type Effort = "S" | "M" | "L";
+export type Effort = "XS" | "S" | "M" | "L" | "XL" | "XXL";
+
+export interface SubModule {
+  name: string;
+  effort?: Effort;
+  description?: string;
+}
 
 export interface ModuleItem {
   id: string;
@@ -7,6 +13,8 @@ export interface ModuleItem {
   effort: Effort;
   risks: string[];
   score: number;
+  subModules?: SubModule[];
+  dependencies?: string[];
 }
 
 export interface AnalysisResult {
@@ -230,9 +238,12 @@ function detectFeatures(text: string): DetectedFeatures {
 }
 
 function sizeFromScore(score: number): Effort {
+  if (score <= 1) return "XS";
   if (score <= 2) return "S";
   if (score <= 5) return "M";
-  return "L";
+  if (score <= 8) return "L";
+  if (score <= 12) return "XL";
+  return "XXL";
 }
 
 function tokenize(input: string): string[] {
