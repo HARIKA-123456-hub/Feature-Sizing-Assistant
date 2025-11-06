@@ -354,10 +354,19 @@ export default function Index() {
                                   <TooltipTrigger asChild>
                                     <button
                                       type="button"
-                                      className={`inline-flex items-center justify-center w-6 h-6 rounded text-xs font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 ${riskBadgeColor}`}
-                                      aria-label={`Risk level: ${riskLevel}. ${riskText}${dependencies ? `. Dependencies: ${dependencies}` : ""}`}
+                                      className={`inline-flex items-center justify-center w-6 h-6 rounded text-base font-bold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1 transition-colors ${
+                                        riskLevel === "High" ? "text-red-600" :
+                                        riskLevel === "Medium" ? "text-yellow-500" :
+                                        "text-green-600"
+                                      }`}
+                                      style={{
+                                        color: riskLevel === "High" ? "#dc2626" : 
+                                               riskLevel === "Medium" ? "#eab308" : 
+                                               "#16a34a"
+                                      }}
+                                      aria-label={`${riskLevel} Risk: ${riskText}${dependencies ? `. Dependencies: ${dependencies}` : ""}`}
                                     >
-                                      {riskLevel === "High" ? "H" : riskLevel === "Medium" ? "M" : "L"}
+                                      ⚠
                                     </button>
                                   </TooltipTrigger>
                                   <TooltipContent className="max-w-xs">

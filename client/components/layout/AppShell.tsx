@@ -10,7 +10,6 @@ export default function AppShell({ children }: PropsWithChildren) {
             <span className="font-semibold tracking-tight">Feature Scoper</span>
           </a>
           <nav className="hidden md:flex items-center gap-6 text-sm text-muted-foreground">
-            <span className="hidden md:inline">Effort sizing: S / M / L</span>
           </nav>
         </div>
       </header>
