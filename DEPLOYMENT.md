@@ -30,7 +30,7 @@ Use these settings:
 - **Region**: Choose the closest region to your users
 - **Branch**: `main` (or your default branch)
 - **Root Directory**: Leave empty (or `mystic-zone` if your repo root is different)
-- **Build Command**: `sh -c "NODE_ENV=development npm install && npm run build"`
+- **Build Command**: `npm install && npm run build`
 - **Start Command**: `npm start`
 
 ### 4. Set Environment Variables
