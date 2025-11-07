@@ -121,8 +121,15 @@ Return ONLY a valid JSON array in this exact format:
 
     res.json({ modules, flags: allGaps });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("AI analysis failed:", error);
-    res.status(500).json({ error: 'AI analysis failed', details: error.message });
+    // Don't expose internal error details to clients
+    const errorMessage = error?.message || 'Unknown error occurred';
+    res.status(500).json({ 
+      error: 'AI analysis failed', 
+      message: process.env.NODE_ENV === 'production' 
+        ? 'An error occurred while processing your request' 
+        : errorMessage 
+    });
   }
 }

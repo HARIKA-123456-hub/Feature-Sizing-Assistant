@@ -1,15 +1,30 @@
 import path from "path";
 import { createServer } from "./index";
 import * as express from "express";
+import { fileURLToPath } from "url";
 
 const app = createServer();
 const port = process.env.PORT || 3000;
 
+// Handle uncaught errors
+process.on("uncaughtException", (error) => {
+  console.error("❌ Uncaught Exception:", error);
+  // Don't exit, let the server continue running
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
+  // Don't exit, let the server continue running
+});
+
 // In production, serve the built SPA files
-const __dirname = import.meta.dirname;
+const __dirname = import.meta.dirname ?? path.dirname(fileURLToPath(import.meta.url));
 const distPath = path.join(__dirname, "../spa");
 
 console.log(`📁 Serving static files from: ${distPath}`);
+console.log(`🌍 Server starting on port: ${port}`);
+console.log(`🔑 NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`🔑 OPENAI_API_KEY configured: ${!!process.env.OPENAI_API_KEY}`);
 
 // Serve static files
 app.use(express.static(distPath));
@@ -39,6 +54,13 @@ app.listen(port, () => {
   console.log(`🚀 Fusion Starter server running on port ${port}`);
   console.log(`📱 Frontend: http://localhost:${port}`);
   console.log(`🔧 API: http://localhost:${port}/api`);
+  console.log(`✅ Server is ready to accept connections`);
+}).on("error", (error: any) => {
+  console.error(`❌ Server failed to start:`, error);
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${port} is already in use`);
+  }
+  process.exit(1);
 });
 
 // Graceful shutdown
