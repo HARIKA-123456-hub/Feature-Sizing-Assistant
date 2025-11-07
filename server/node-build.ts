@@ -9,6 +9,8 @@ const port = process.env.PORT || 3000;
 const __dirname = import.meta.dirname;
 const distPath = path.join(__dirname, "../spa");
 
+console.log(`📁 Serving static files from: ${distPath}`);
+
 // Serve static files
 app.use(express.static(distPath));
 
@@ -24,7 +26,13 @@ app.use((req, res, next) => {
     return next();
   }
 
-  res.sendFile(path.join(distPath, "index.html"));
+  const indexPath = path.join(distPath, "index.html");
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error(`❌ Error serving index.html:`, err);
+      res.status(500).json({ error: "Failed to serve application" });
+    }
+  });
 });
 
 app.listen(port, () => {
